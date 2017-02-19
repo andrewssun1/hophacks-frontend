@@ -5,6 +5,7 @@ import LoginPage from './LoginPage';
 import AccountsComponent from './AccountsComponent';
 import SettingsComponent from './SettingsComponent';
 import AnalyticsComponent from './AnalyticsComponent';
+import DonationsComponent from './DonationsComponent'
 import { Router, Route, hashHistory } from 'react-router';
 
 const stuff = (
@@ -13,6 +14,7 @@ const stuff = (
       <Route path='/login' component={LoginPage}></Route>
       <Route path='/accounts' component={AccountsComponent}></Route>
       <Route path='/charitysettings' component={SettingsComponent}></Route>
+      <Route path='/donations' component={DonationsComponent}></Route>
       <Route path='/analytics' component={AnalyticsComponent}></Route>
     </Route>
   </Router>

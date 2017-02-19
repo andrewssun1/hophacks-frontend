@@ -96,6 +96,8 @@ export default class LoginPage extends React.Component {
       var response2 = JSON.parse(xhttp.responseText);
       if (response2.url){
         localStorage.userurl = response2.url;
+        localStorage.userid = response2.profile.customer_id;
+        localStorage.charityid = response2.profile.charity_account_id;
       }
       console.log(localStorage.userurl);
       hashHistory.push('/accounts');

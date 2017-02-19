@@ -11,6 +11,7 @@ import {restRequest} from './Utilities.js';
 const davidID = "58a7e5241756fc834d904a5a";
 const apiKey = "52f69545ffa7fffb30dc369ac3103f7f";
 const C1_URL = "http://api.reimaginebanking.com";
+const HOST_NAME = "http://colab-sbx-92.oit.duke.edu";
 
 export default class SettingsComponent extends React.Component {
 
@@ -35,6 +36,7 @@ export default class SettingsComponent extends React.Component {
       alertVisible: true
     }
     this.handleAlertDismiss = this.handleAlertDismiss.bind(this);
+    this.generateRules = this.generateRules.bind(this);
   }
 
   handleAlertDismiss() {
@@ -55,10 +57,39 @@ export default class SettingsComponent extends React.Component {
     );
   }
 
+  generateRules(){
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", HOST_NAME + "/rules/", false);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.setRequestHeader("Authorization", "Token " + localStorage.token);
+    xhttp.send();
+    var response = JSON.parse(xhttp.responseText);
+
+    for (let i = 0; i < response.results.length; i++){
+      xhttp.open("GET", response.results[i].sector, false);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.setRequestHeader("Authorization", "Token " + localStorage.token);
+      xhttp.send();
+      var sectorResponse = JSON.parse(xhttp.responseText);
+      this.state.currTable.push({sector: sectorResponse.name, rate: response.results[i].rate});
+    }
+
+    return(
+      <BootstrapTable key={"tableRules"} ref={"tableRules"} data={this.state.currTable} hover>
+      <TableHeaderColumn isKey dataField='id' hidden>id</TableHeaderColumn>
+      <TableHeaderColumn dataField='sector'>Sector</TableHeaderColumn>
+      <TableHeaderColumn dataField='rate'>Rate</TableHeaderColumn>
+      </BootstrapTable>
+    );
+  }
+
   render() {
     return (
         <div className="col-md-6 col-md-offset-3">
         {this.state.alertVisible ? this.generateAlert() : null}
+        <h4>Current Rules</h4>
+        {this.generateRules()}
       <form>
   <Checkbox checked >
     Insights On/Off

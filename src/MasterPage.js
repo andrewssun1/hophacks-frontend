@@ -35,9 +35,9 @@ export default class MasterPage extends React.Component {
   </Navbar.Header>
   {!!localStorage.token ?
   <Nav>
-    <NavItem eventKey={1} href="#/accounts">Accounts</NavItem>
-    <NavItem eventKey={2} href="#/charitysettings">Charity Settings</NavItem>
-    <NavItem eventKey={3} href="#/charityawards">Charity Awards</NavItem>
+    <NavItem eventKey={1} href="#/accounts">Purchases</NavItem>
+    <NavItem eventKey={2} href="#/charitysettings">Settings</NavItem>
+    <NavItem eventKey={3} href="#/donations">Donations</NavItem>
     <NavItem eventKey={4} href="#/analytics">Analytics</NavItem>
   </Nav>
   : null}
