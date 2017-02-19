@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import MasterPage from './MasterPage';
 import LoginPage from './LoginPage';
 import AccountsComponent from './AccountsComponent';
+import SettingsComponent from './SettingsComponent';
+import AnalyticsComponent from './AnalyticsComponent';
 import { Router, Route, hashHistory } from 'react-router';
 
 const stuff = (
@@ -10,6 +12,8 @@ const stuff = (
     <Route path='/' component={MasterPage}>
       <Route path='/login' component={LoginPage}></Route>
       <Route path='/accounts' component={AccountsComponent}></Route>
+      <Route path='/charitysettings' component={SettingsComponent}></Route>
+      <Route path='/analytics' component={AnalyticsComponent}></Route>
     </Route>
   </Router>
 );

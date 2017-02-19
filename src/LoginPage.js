@@ -7,6 +7,10 @@ import {Form, FormGroup, Col, Button, ControlLabel, FormControl, Alert} from 're
 import { hashHistory } from 'react-router';
 import { restRequest } from './Utilities';
 
+const HOST_NAME = "http://colab-sbx-92.oit.duke.edu";
+//const HOST_NAME = "http://127.0.0.1:8000";
+
+
 export default class LoginPage extends React.Component {
   constructor(props) {
     super(props);
@@ -19,8 +23,6 @@ export default class LoginPage extends React.Component {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.createAlert = this.createAlert.bind(this);
-    this.testSuccessCb = this.testSuccessCb.bind(this);
-    this.testErrorCb = this.testErrorCb.bind(this);
   }
   handleUsernameChange(e) {
     this.setState({_username: e.target.value});
@@ -46,33 +48,30 @@ export default class LoginPage extends React.Component {
       });
   }
 
-  testSuccessCb(xhttpResponse){
-    var response = JSON.parse(xhttpResponse);
-    // put access token in local storage and check whether it's user or admin
-    localStorage.token = response['access_token'];
-    this.setState({_alert_both: false});
-
-    restRequest("GET", "/api/user/current/", "application/json", null,
-                (xhttpResponse)=>{
-                  var userResponse = JSON.parse(xhttpResponse);
-                  localStorage.username = userResponse.username;
-                  localStorage.isAdmin = userResponse.is_staff;
-                  hashHistory.push('/main');
-                }, ()=>{});
-  }
-
-  testErrorCb(){
-    console.log('Unauthorized!!!!!');
-    //localStorage.alert = true;
-    this.setState({_alert_both: true});
-  }
+  // testSuccessCb(xhttpResponse){
+  //   var response = JSON.parse(xhttpResponse);
+  //   // put access token in local storage and check whether it's user or admin
+  //   localStorage.token = response['access_token'];
+  //   this.setState({_alert_both: false});
+  //
+  //   restRequest("GET", "/api/user/current/", "application/json", null,
+  //               (xhttpResponse)=>{
+  //                 var userResponse = JSON.parse(xhttpResponse);
+  //                 localStorage.username = userResponse.username;
+  //                 localStorage.isAdmin = userResponse.is_staff;
+  //                 hashHistory.push('/main');
+  //               }, ()=>{});
+  // }
+  //
+  // testErrorCb(){
+  //   console.log('Unauthorized!!!!!');
+  //   //localStorage.alert = true;
+  //   this.setState({_alert_both: true});
+  // }
 
   handleClick() {
     // Makes sure it's not alerting
     this.setState({_alert_both: false});
-
-    // Create the http request to do REST calls
-    const clientID = '2yCZ6QlDjFuS7ZTOwOaWCHPX7PU7s2iwWANqRFSy';
 
     // Validate username/password - trigger alert if invalid
     if (this.state._username.length < 1 || this.state._password.length < 1){
@@ -80,11 +79,37 @@ export default class LoginPage extends React.Component {
       return null;
     }
 
+    var request_str = "username="+this.state._username+"&password="+this.state._password;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", HOST_NAME + "/api-token-auth/", false);
+    xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhttp.send(request_str);
+    var response = JSON.parse(xhttp.responseText);
+    if (response.token){
+      localStorage.token = response['token'];
+      localStorage.username = this.state._username;
+      this.setState({_alert_both: false});
+      xhttp.open("GET", HOST_NAME + "/charityapp/uid/", false);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.setRequestHeader("Authorization", "Token " + localStorage.token);
+      xhttp.send();
+      var response2 = JSON.parse(xhttp.responseText);
+      if (response2.url){
+        localStorage.userurl = response2.url;
+      }
+      console.log(localStorage.userurl);
+      hashHistory.push('/accounts');
+    }
+    else{
+      this.setState({_alert_both: true});
+    }
+
     // REST call parameters
-    var request_str = "grant_type=password&username="+this.state._username+"&password="+this.state._password+"&client_id="+clientID;
-    restRequest("POST", "/api/o/token/",
-                "application/x-www-form-urlencoded", request_str,
-                this.testSuccessCb, this.testErrorCb);
+    // var request_str = "grant_type=password&username="+this.state._username+"&password="+this.state._password;
+    // restRequest("POST", "/api/o/token/",
+    //             "application/x-www-form-urlencoded", request_str,
+    //             this.testSuccessCb, this.testErrorCb);
+
 
   }
   render() {

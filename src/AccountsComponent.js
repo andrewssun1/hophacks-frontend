@@ -87,30 +87,7 @@ export default class AccountsComponent extends React.Component {
                   },
                 ()=>{});
   }
-
-  // generateTable(acc, i, cb){
-  //   var currTable = [];
-  //   var currData = [];
-  //   restRequest("GET", "/accounts/"+acc._id+"/purchases"+"?key="+apiKey, "application/json", null,
-  //               (responseText)=>{
-  //                 var response = JSON.parse(responseText);
-  //                 console.log(response);
-  //                 currData = response;
-  //                 currTable = (
-  //                  <BootstrapTable key={"table"+i} ref={"table"+i} data={currData} hover>
-  //                  <TableHeaderColumn isKey dataField='_id' hidden>id</TableHeaderColumn>
-  //                  <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
-  //                  <TableHeaderColumn dataField='Amount'>Amount</TableHeaderColumn>
-  //                  <TableHeaderColumn dataField='Merchant'>Merchants</TableHeaderColumn>
-  //                  <TableHeaderColumn dataField='Status'>Status</TableHeaderColumn>
-  //                  </BootstrapTable>
-  //                );
-  //                console.log("HEloooo")
-  //                cb(currTable);
-  //               },
-  //             ()=>{});
-  // }
-
+  
   render() {
     return (
       <div>
